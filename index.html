@@ -1351,7 +1351,7 @@ body.theme-light #settingsModal input[name="theme"]:checked + div::after,
                         expiry: p.expiry || null,
                         annual_premium: Number(p.annualPremium || 0),
                         comm_perc: Number(p.commPerc || 0),
-                        split: p.split if p.split is not null else null,
+                        split: (p.split !== undefined && p.split !== null) ? Number(p.split) : null,
                         notes: p.notes || null,
                         updated_at: new Date().toISOString()
                     }));
