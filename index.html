@@ -1648,7 +1648,6 @@ const AVATAR_PRESETS = [
                 if(!currentUser || !currentUser.uid) return;
                 currentUser.avatarId = avatarId;
 
-                }
 
                 const dn = computeDisplayNameFromProfile({ displayName: currentUser.displayName, name: currentUser.name, surname: currentUser.surname }, { displayName: currentUser.displayName, email: currentUser.email });
                 renderUserHeader(dn, currentUser.email, currentUser.avatarId);
