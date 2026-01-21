@@ -1761,6 +1761,48 @@ function saveAllData(){
 
 
 
+        
+
+
+            } catch(err) {
+                console.error(err);
+                alert('Errore inizializzazione Firebase: ' + err.message);
+            }
+        });
+
+        
+
+        // =========================================
+        // AUTH Supabase - funzioni globali per i form
+        // =========================================
+        async function handleRegister(e){
+            e.preventDefault();
+            await sbWaitReady();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const pass  = document.getElementById('regPass').value;
+            if(!email || !pass) return alert('Email e password obbligatorie.');
+            const { error } = await SB.auth.signUp({ email, password: pass });
+            if(error) return alert('Errore registrazione: ' + error.message);
+            alert('Registrazione completata. Ora effettua il login.');
+        }
+
+        async function handleLogin(e){
+            e.preventDefault();
+            await sbWaitReady();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pass  = document.getElementById('loginPass').value;
+            if(!email || !pass) return alert('Inserisci email e password');
+            const { error } = await SB.auth.signInWithPassword({ email, password: pass });
+            if(error) return alert('Credenziali non valide: ' + error.message);
+        }
+
+        async function handleLogout(){
+            try{ if(typeof manualSaveAll === 'function') await manualSaveAll(); }catch(e){}
+            await sbWaitReady();
+            const { error } = await SB.auth.signOut();
+            if(error) alert('Errore logout: ' + error.message);
+        }
+
         document.addEventListener('DOMContentLoaded', async ()=>{
             try{
                 await sbWaitReady();
@@ -1773,13 +1815,7 @@ function saveAllData(){
             }
         });
 
-            } catch(err) {
-                console.error(err);
-                alert('Errore inizializzazione Firebase: ' + err.message);
-            }
-        });
-
-        function toggleAuthMode() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
+function toggleAuthMode() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
         function handleRegister_FIREBASE_OLD(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
