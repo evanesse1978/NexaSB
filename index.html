@@ -2037,7 +2037,7 @@ function initApp() {
                             if(importBtn) importBtn.innerHTML = '<i class="fa-solid fa-upload text-info"></i> Importa Archivio';
                             // Riavvia i listener in caso di errore
                             
-                        }
+                        } catch(e){ console.error(e); }
                     } 
                 } catch (err) { 
                     alert("Il file selezionato non è valido."); 
@@ -3837,7 +3837,7 @@ async function processImport(input){
         location.reload();
         if(importBtn) importBtn.innerHTML = '<i class="fa-solid fa-upload text-info"></i> Importa Archivio';
         try{  }catch(e){}
-      }
+      } catch(e){ console.error(e); }
     } catch(err){
       console.error(err);
       alert('Il file selezionato non è valido.');
