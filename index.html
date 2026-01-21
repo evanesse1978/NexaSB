@@ -431,7 +431,6 @@
 .theme-light .text-darktext { color: #0f172a !important; }
 
 
-
 /* =========================================================
    EXTRA FIX: LIGHT THEME (contrast + hover + buttons)
    Obiettivo: in light mode niente testi “chiari” su fondo chiaro
@@ -530,7 +529,6 @@ body { min-height: 100dvh; height: 100dvh; }
     max-height: calc(100dvh - 2rem) !important;
   }
 }
-
 
 
 /* =========================
@@ -1493,6 +1491,12 @@ body.theme-light #settingsModal input[name="theme"]:checked + div::after,
         });
 
 function toggleAuthMode() { document.getElementById('loginForm').classList.toggle('hidden'); document.getElementById('registerForm').classList.toggle('hidden'); }
+// Bind funzioni globali (onclick/onsubmit)
+window.toggleAuthMode = toggleAuthMode;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+window.handleLogout = handleLogout;
+
 
         // ==============================
         // IMPOSTAZIONI / TEMA
@@ -1532,6 +1536,7 @@ function toggleAuthMode() { document.getElementById('loginForm').classList.toggl
             m.classList.add('hidden');
         }
 
+  function computeDisplayNameFromProfile(profile) {
   const n = (profile?.name || "").trim();
   const s = (profile?.surname || "").trim();
   const full = `${n} ${s}`.trim();
@@ -2258,7 +2263,6 @@ function initApp() {
         function checkCustomCompany(){const v=document.getElementById('polCompany').value; const i=document.getElementById('polCustomCompany'); if(v==='ALTRO')i.classList.remove('hidden'); else i.classList.add('hidden');}
         
         function safeParseFloat(val) { if(!val) return 0; if(typeof val === 'number') return val; return parseFloat(val.replace(',', '.')); }
-
 
 
         function toISODateLocal(d){
@@ -3348,7 +3352,6 @@ function editTitle(polId, titId){
 }
 
 
-
         function cancelPayment(pid, tid) {
   try {
     if (!confirm("Annullare l'incasso del titolo?")) return;
@@ -3369,7 +3372,6 @@ function editTitle(polId, titId){
     console.log('cancelPayment', e);
   }
 }
-
 
 
     </script>
@@ -3453,7 +3455,6 @@ function editTitle(polId, titId){
 </div>
 
 
-
 <script>
 // =========================
 // SINISTRI (CLAIMS) - V1
@@ -3515,73 +3516,6 @@ function getClientNameById(cid){
   try { const c = clients?.find(x => String(x.id) === String(cid)); return c?.name || ''; } catch(e){ return ''; }
 }
 
-// --- legacy integration (wrap existing functions) ---
-(function(){
-  const _saveLocalBackup = (typeof saveLocalBackup === 'function') ? saveLocalBackup : null;
-
-  // stop listeners
-  if(_fbStopListeners){
-      try { _ } catch(e){}
-    };
-  }
-
-  // start listeners
-  if(_fbStartListeners){
-      _
-      try {
-        const uid = currentUser.uid;
-          (qs) => {
-                try{
-            const arr = [];
-            const known = new Set();
-            qs.forEach(d => { arr.push(d.data()); known.add(d.id); });
-            claims = arr;
-renderClaims();
-          
-                } catch(e){
-                } finally {
-                        saveAllData();
-                    }
-                }
-}
-        );
-    };
-  }
-
-  // full sync
-  if(_fbFullSyncToFirestore){
-      await _fbFullSyncToFirestore();
-      // NB: _fbFullSyncToFirestore fa commit batch; qui facciamo un mini-batch separato per claims
-      try {
-        const uid = currentUser.uid;
-        const seenClaims = new Set();
-
-        (claims || []).forEach(cl => {
-          if(!cl || cl.id === undefined || cl.id === null) return;
-          const id = String(cl.id);
-          seenClaims.add(id);
-          batch.set(
-            { merge: true }
-          );
-        });
-
-        });
-
-        await batch.commit();
-    };
-  }
-
-  // local backup
-  if(_saveLocalBackup){
-    window.saveLocalBackup = function(){
-      _saveLocalBackup();
-      try{
-        if(!currentUser || !currentUser.uid) return;
-        localStorage.setItem('evanEsseclaims' + currentUser.uid, JSON.stringify(claims || []));
-      } catch(e){}
-    };
-  }
-})();
 
 // --- Policy modal helper button uses openClaimModal(editingPolicyId...) already in HTML ---
 
@@ -3948,7 +3882,6 @@ function resetDatabase(){
     };
   }
 })();
-
 
 
 function setHeaderTitle(t, s){
